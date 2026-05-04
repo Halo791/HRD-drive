@@ -33,15 +33,17 @@ Repo ini sudah disiapkan untuk Netlify. Untuk menjalankannya di `hrd-drive.netli
    - Functions directory: `netlify/functions`
 3. Isi environment variable berikut di Netlify:
 
-- `MINIO_ENDPOINT_URL`
-- `MINIO_BUCKET`
-- `MINIO_ACCESS_KEY`
-- `MINIO_SECRET_KEY`
+- `APP_NAME` = `HRD Drive` atau nama yang kamu mau
+- `MINIO_ENDPOINT_URL` = URL publik MinIO, misalnya `https://minio.domainkamu.com`
+- `MINIO_BUCKET` = nama bucket, misalnya `storage`
+- `MINIO_ACCESS_KEY` = access key MinIO
+- `MINIO_SECRET_KEY` = secret key MinIO
+- `MAX_UPLOAD_SIZE_BYTES` = opsional, misalnya `52428800`
 
 Jika aplikasi akan dibuka publik, aktifkan juga:
 
-- `APP_USERNAME`
-- `APP_PASSWORD`
+- `APP_USERNAME` = username login dashboard
+- `APP_PASSWORD` = password login dashboard
 
 4. Deploy site-nya, lalu atur nama site menjadi `hrd-drive` jika masih tersedia.
 
@@ -49,6 +51,7 @@ Catatan:
 
 - `MINIO_ENDPOINT_URL` harus mengarah ke MinIO yang bisa dijangkau dari browser, karena download memakai presigned URL dari MinIO.
 - Kalau kamu ingin MinIO tetap privat sepenuhnya, kita perlu ubah download flow supaya lewat proxy function, bukan redirect langsung.
+- Untuk lokal, pakai [.env.example](/Users/macbookpro/Documents/minio/.env.example). Untuk Netlify, pakai [.env.netlify.example](/Users/macbookpro/Documents/minio/.env.netlify.example) sebagai acuan.
 
 ## Catatan penting
 
