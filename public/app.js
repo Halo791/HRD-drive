@@ -1,0 +1,182 @@
+const api = {
+  files: '/.netlify/functions/files',
+  upload: '/.netlify/functions/upload',
+  download: '/.netlify/functions/download',
+  delete: '/.netlify/functions/delete'
+};
+
+const authUser = document.getElementById('authUser');
+const authPass = document.getElementById('authPass');
+const saveAuth = document.getElementById('saveAuth');
+const clearAuth = document.getElementById('clearAuth');
+const message = document.getElementById('message');
+const uploadForm = document.getElementById('uploadForm');
+const fileInput = document.getElementById('fileInput');
+const fileRows = document.getElementById('fileRows');
+const emptyState = document.getElementById('emptyState');
+const tableWrap = document.getElementById('tableWrap');
+
+function setMessage(text, type = 'success') {
+  message.textContent = text;
+  message.className = `alert ${type}`;
+  message.hidden = false;
+}
+
+function getAuthHeader() {
+  const storedUser = localStorage.getItem('hrdDriveUser') || '';
+  const storedPass = localStorage.getItem('hrdDrivePass') || '';
+
+  if (!storedUser) {
+    return {};
+  }
+
+  return {
+    Authorization: `Basic ${btoa(`${storedUser}:${storedPass}`)}`
+  };
+}
+
+function syncAuthFields() {
+  authUser.value = localStorage.getItem('hrdDriveUser') || '';
+  authPass.value = localStorage.getItem('hrdDrivePass') || '';
+}
+
+async function request(url, options = {}) {
+  const headers = {
+    ...(options.headers || {}),
+    ...getAuthHeader()
+  };
+
+  const response = await fetch(url, {
+    ...options,
+    headers
+  });
+
+  if (response.status === 401) {
+    throw new Error('Autentikasi diperlukan. Isi username/password lalu simpan.');
+  }
+
+  return response;
+}
+
+function formatSize(bytes) {
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${Math.max(1, Math.round(kb))} KB`;
+  return `${(kb / 1024).toFixed(1)} MB`;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function renderRows(objects) {
+  fileRows.innerHTML = '';
+
+  if (!objects.length) {
+    tableWrap.hidden = true;
+    emptyState.hidden = false;
+    emptyState.textContent = 'Belum ada file di bucket ini.';
+    return;
+  }
+
+  emptyState.hidden = true;
+  tableWrap.hidden = false;
+
+  for (const file of objects) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="file-name">${escapeHtml(file.displayName)}</div>
+        <div class="file-path">${escapeHtml(file.name)}</div>
+      </td>
+      <td>${formatSize(file.size)}</td>
+      <td>${new Date(file.lastModified).toLocaleString('id-ID')}</td>
+      <td class="actions">
+        <a class="button secondary" href="${api.download}?name=${encodeURIComponent(file.name)}">Unduh</a>
+        <button class="button danger" type="button" data-delete="${file.name}">Hapus</button>
+      </td>
+    `;
+    fileRows.appendChild(tr);
+  }
+
+  fileRows.querySelectorAll('[data-delete]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const name = button.getAttribute('data-delete');
+      if (!confirm('Hapus file ini?')) {
+        return;
+      }
+
+      try {
+        const response = await request(`${api.delete}?name=${encodeURIComponent(name)}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+        setMessage(data.message || 'File berhasil dihapus.', 'success');
+        await loadFiles();
+      } catch (error) {
+        setMessage(error.message, 'error');
+      }
+    });
+  });
+}
+
+async function loadFiles() {
+  try {
+    const response = await request(api.files);
+    const data = await response.json();
+    renderRows(data.objects || []);
+  } catch (error) {
+    emptyState.hidden = false;
+    tableWrap.hidden = true;
+    emptyState.textContent = error.message;
+  }
+}
+
+saveAuth.addEventListener('click', async () => {
+  localStorage.setItem('hrdDriveUser', authUser.value.trim());
+  localStorage.setItem('hrdDrivePass', authPass.value);
+  setMessage('Login disimpan di browser.', 'success');
+  await loadFiles();
+});
+
+clearAuth.addEventListener('click', async () => {
+  localStorage.removeItem('hrdDriveUser');
+  localStorage.removeItem('hrdDrivePass');
+  syncAuthFields();
+  setMessage('Login dihapus dari browser.', 'success');
+  await loadFiles();
+});
+
+uploadForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  if (!fileInput.files || fileInput.files.length === 0) {
+    setMessage('Pilih minimal satu file.', 'error');
+    return;
+  }
+
+  const formData = new FormData();
+  Array.from(fileInput.files).forEach((file) => {
+    formData.append('files', file);
+  });
+
+  try {
+    const response = await request(api.upload, {
+      method: 'POST',
+      body: formData
+    });
+    const data = await response.json();
+    setMessage(data.message || 'Upload berhasil.', 'success');
+    fileInput.value = '';
+    await loadFiles();
+  } catch (error) {
+    setMessage(error.message, 'error');
+  }
+});
+
+syncAuthFields();
+loadFiles();

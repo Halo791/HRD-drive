@@ -24,7 +24,14 @@ docker compose up --build
 
 ## Deploy online
 
-Set environment variable berikut ke MinIO yang bisa dijangkau publik:
+Repo ini sudah disiapkan untuk Netlify. Untuk menjalankannya di `hrd-drive.netlify.app`:
+
+1. Hubungkan repo GitHub ini ke Netlify
+2. Set build settings:
+   - Build command: kosongkan atau biarkan default
+   - Publish directory: `public`
+   - Functions directory: `netlify/functions`
+3. Isi environment variable berikut di Netlify:
 
 - `MINIO_ENDPOINT_URL`
 - `MINIO_BUCKET`
@@ -36,7 +43,12 @@ Jika aplikasi akan dibuka publik, aktifkan juga:
 - `APP_USERNAME`
 - `APP_PASSWORD`
 
-Lalu deploy aplikasi ini ke VPS, Render, Railway, Fly.io, atau platform lain yang bisa menjalankan Node.js.
+4. Deploy site-nya, lalu atur nama site menjadi `hrd-drive` jika masih tersedia.
+
+Catatan:
+
+- `MINIO_ENDPOINT_URL` harus mengarah ke MinIO yang bisa dijangkau dari browser, karena download memakai presigned URL dari MinIO.
+- Kalau kamu ingin MinIO tetap privat sepenuhnya, kita perlu ubah download flow supaya lewat proxy function, bukan redirect langsung.
 
 ## Catatan penting
 
