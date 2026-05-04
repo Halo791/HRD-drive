@@ -51,6 +51,8 @@ Catatan:
 
 - Halaman root `/` sekarang menjadi halaman login.
 - Halaman kerja upload dan daftar file ada di `/upload.html`.
+- Halaman upload memakai redirect otomatis dari login jika credential sudah tersimpan di browser.
+- Proteksi halaman upload bersifat client-side untuk page access, sedangkan API tetap diproteksi dengan basic auth.
 - `MINIO_ENDPOINT_URL` harus mengarah ke MinIO yang bisa dijangkau dari browser, karena download memakai presigned URL dari MinIO.
 - Kalau kamu ingin MinIO tetap privat sepenuhnya, kita perlu ubah download flow supaya lewat proxy function, bukan redirect langsung.
 - Untuk lokal, pakai [.env.example](/Users/macbookpro/Documents/minio/.env.example). Untuk Netlify, pakai [.env.netlify.example](/Users/macbookpro/Documents/minio/.env.netlify.example) sebagai acuan.

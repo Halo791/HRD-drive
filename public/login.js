@@ -2,6 +2,7 @@ const authUser = document.getElementById('authUser');
 const authPass = document.getElementById('authPass');
 const loginForm = document.getElementById('loginForm');
 const message = document.getElementById('message');
+const loginGate = document.getElementById('loginGate');
 
 function setMessage(text, type = 'success') {
   message.textContent = text;
@@ -25,6 +26,12 @@ const stored = getStoredCredentials();
 authUser.value = stored.user;
 authPass.value = stored.pass;
 
+if (stored.user && stored.pass) {
+  window.location.replace('/upload.html');
+} else {
+  loginGate.style.visibility = 'visible';
+}
+
 loginForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
@@ -37,6 +44,6 @@ loginForm.addEventListener('submit', (event) => {
   }
 
   saveCredentials(user, pass);
-  window.location.href = '/upload.html';
+  loginGate.setAttribute('aria-busy', 'true');
+  window.location.replace('/upload.html');
 });
-

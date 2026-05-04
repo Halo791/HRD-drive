@@ -12,6 +12,7 @@ const fileRows = document.getElementById('fileRows');
 const emptyState = document.getElementById('emptyState');
 const tableWrap = document.getElementById('tableWrap');
 const logoutBtn = document.getElementById('logoutBtn');
+const pageGate = document.getElementById('pageGate');
 
 function setMessage(text, type = 'success') {
   message.textContent = text;
@@ -37,8 +38,11 @@ function requireLogin() {
   const pass = localStorage.getItem('hrdDrivePass') || '';
 
   if (!user || !pass) {
-    window.location.href = '/';
+    window.location.replace('/');
+    return false;
   }
+
+  return true;
 }
 
 async function request(url, options = {}) {
@@ -167,9 +171,10 @@ uploadForm.addEventListener('submit', async (event) => {
 logoutBtn.addEventListener('click', () => {
   localStorage.removeItem('hrdDriveUser');
   localStorage.removeItem('hrdDrivePass');
-  window.location.href = '/';
+  window.location.replace('/');
 });
 
-requireLogin();
-loadFiles();
-
+if (requireLogin()) {
+  pageGate.style.visibility = 'visible';
+  loadFiles();
+}

@@ -38,6 +38,14 @@ a {
   padding: 32px 0 56px;
 }
 
+.page-gate {
+  visibility: hidden;
+}
+
+.page-gate[hidden] {
+  display: none;
+}
+
 .shell-center {
   min-height: 100vh;
   display: grid;
@@ -55,6 +63,44 @@ a {
 .hero-single {
   grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
+}
+
+.topbar {
+  width: min(1180px, calc(100% - 32px));
+  margin: 20px auto 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid var(--panel-border);
+  border-radius: 22px;
+  background: rgba(7, 11, 22, 0.72);
+  backdrop-filter: blur(18px);
+}
+
+.topbar-brand {
+  display: grid;
+  gap: 4px;
+}
+
+.topbar-kicker {
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.topbar-brand strong {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .eyebrow {
@@ -318,9 +364,16 @@ th {
   .hero,
   .upload-form {
     grid-template-columns: 1fr;
+    width: min(1180px, calc(100% - 32px));
   }
 
   .hero-single {
     gap: 16px;
+  }
+
+  .topbar {
+    width: min(1180px, calc(100% - 32px));
+    flex-direction: column;
+    align-items: stretch;
   }
 }

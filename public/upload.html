@@ -7,6 +7,17 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
+    <div id="pageGate" class="page-gate">
+    <header class="topbar">
+      <div class="topbar-brand">
+        <span class="topbar-kicker">HRD Drive</span>
+        <strong>MinIO Storage</strong>
+      </div>
+      <nav class="topbar-actions">
+        <a class="button secondary" href="/">Ganti Login</a>
+        <button id="logoutBtn" type="button" class="button danger">Logout</button>
+      </nav>
+    </header>
     <main class="shell">
       <section class="hero">
         <div>
@@ -18,12 +29,12 @@
         </div>
         <div class="meta-card auth-card">
           <div class="auth-row">
-            <span>Session login</span>
+            <span>Session login aktif</span>
           </div>
           <p class="session-note">Kredensial disimpan di browser ini sampai kamu logout.</p>
           <div class="auth-actions">
-            <a class="button secondary" href="/">Ganti Login</a>
-            <button id="logoutBtn" type="button" class="button danger">Logout</button>
+            <a class="button secondary" href="/">Buka Login</a>
+            <button id="logoutBtn" type="button" class="button danger">Logout Sekarang</button>
           </div>
         </div>
       </section>
@@ -67,6 +78,7 @@
         </div>
       </section>
     </main>
+    </div>
     <script src="/upload.js"></script>
   </body>
 </html>
