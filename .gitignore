@@ -1,0 +1,6 @@
+.env
+node_modules
+local-storage
+minio-data
+npm-debug.log*
+.DS_Store

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%= appName %></title>
+    <link rel="stylesheet" href="/public/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">MinIO Storage Dashboard</p>
+          <h1><%= appName %></h1>
+          <p class="lede">
+            Upload, lihat, unduh, dan hapus file dari bucket <strong><%= bucketName %></strong>.
+            Aplikasi ini bisa diarahkan ke MinIO yang online lewat environment variable.
+          </p>
+        </div>
+        <div class="meta-card">
+          <div>
+            <span>Status bucket</span>
+            <strong><%= bucketReady ? 'Siap' : 'Perlu dicek' %></strong>
+          </div>
+          <div>
+            <span>Batas upload</span>
+            <strong><%= uploadLimitMb %> MB</strong>
+          </div>
+          <div>
+            <span>File tersimpan</span>
+            <strong><%= objects.length %></strong>
+          </div>
+        </div>
+      </section>
+
+      <% if (message) { %>
+        <div class="alert success"><%= message %></div>
+      <% } %>
+      <% if (error) { %>
+        <div class="alert error"><%= error %></div>
+      <% } %>
+
+      <section class="panel upload-panel">
+        <div class="panel-head">
+          <h2>Upload File</h2>
+          <p>Pilih satu atau banyak file sekaligus.</p>
+        </div>
+
+        <form class="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+          <label class="file-drop">
+            <span>Tarik file ke sini atau klik untuk memilih</span>
+            <input type="file" name="files" multiple />
+          </label>
+          <button type="submit">Upload ke MinIO</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Daftar File</h2>
+          <p>Klik unduh untuk mengambil file dari MinIO melalui aplikasi ini.</p>
+        </div>
+
+        <% if (objects.length === 0) { %>
+          <div class="empty-state">
+            Belum ada file di bucket ini.
+          </div>
+        <% } else { %>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Ukuran</th>
+                  <th>Diubah</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% objects.forEach((file) => { %>
+                  <tr>
+                    <td>
+                      <div class="file-name"><%= file.displayName %></div>
+                      <div class="file-path"><%= file.name %></div>
+                    </td>
+                    <td><%= Math.max(1, Math.round(file.size / 1024)) %> KB</td>
+                    <td><%= new Date(file.lastModified).toLocaleString('id-ID') %></td>
+                    <td class="actions">
+                      <a class="button secondary" href="/files/<%= encodeURIComponent(file.name) %>">Unduh</a>
+                      <form action="/delete/<%= encodeURIComponent(file.name) %>" method="post" onsubmit="return confirm('Hapus file ini?')">
+                        <button class="button danger" type="submit">Hapus</button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "minio-storage-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A web app for storing files in MinIO and accessing it online.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "minio": "^8.0.6",
+    "multer": "^2.0.2"
+  }
+}
