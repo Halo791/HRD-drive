@@ -63,6 +63,28 @@ async function request(url, options = {}) {
   return response;
 }
 
+async function parseApiResponse(response) {
+  const contentType = response.headers.get('content-type') || '';
+
+  if (contentType.includes('application/json')) {
+    return await response.json();
+  }
+
+  const text = await response.text();
+  return text ? { message: text } : {};
+}
+
+async function requestJson(url, options = {}) {
+  const response = await request(url, options);
+  const payload = await parseApiResponse(response);
+
+  if (!response.ok) {
+    throw new Error(payload.error || payload.message || `Request failed (${response.status})`);
+  }
+
+  return payload;
+}
+
 function formatSize(bytes) {
   const kb = bytes / 1024;
   if (kb < 1024) return `${Math.max(1, Math.round(kb))} KB`;
@@ -116,10 +138,9 @@ function renderRows(objects) {
       }
 
       try {
-        const response = await request(`${api.delete}?name=${encodeURIComponent(name)}`, {
+        const data = await requestJson(`${api.delete}?name=${encodeURIComponent(name)}`, {
           method: 'DELETE'
         });
-        const data = await response.json();
         setMessage(data.message || 'File berhasil dihapus.', 'success');
         await loadFiles();
       } catch (error) {
@@ -131,8 +152,7 @@ function renderRows(objects) {
 
 async function loadFiles() {
   try {
-    const response = await request(api.files);
-    const data = await response.json();
+    const data = await requestJson(api.files);
     renderRows(data.objects || []);
   } catch (error) {
     emptyState.hidden = false;
@@ -155,11 +175,10 @@ uploadForm.addEventListener('submit', async (event) => {
   });
 
   try {
-    const response = await request(api.upload, {
+    const data = await requestJson(api.upload, {
       method: 'POST',
       body: formData
     });
-    const data = await response.json();
     setMessage(data.message || 'Upload berhasil.', 'success');
     fileInput.value = '';
     await loadFiles();

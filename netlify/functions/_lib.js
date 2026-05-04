@@ -5,6 +5,12 @@ function getMinioConfig() {
   const endpointUrl = process.env.MINIO_ENDPOINT_URL || 'http://127.0.0.1:9000';
   const parsed = new URL(endpointUrl);
 
+  if (parsed.hostname.endsWith('netlify.app')) {
+    throw new Error(
+      'MINIO_ENDPOINT_URL points to a Netlify site. Set it to your real MinIO server URL instead.'
+    );
+  }
+
   return {
     endPoint: parsed.hostname,
     port: parsed.port ? Number(parsed.port) : parsed.protocol === 'https:' ? 443 : 80,
@@ -87,4 +93,3 @@ module.exports = {
   sanitizeFileName,
   unauthorized
 };
-
