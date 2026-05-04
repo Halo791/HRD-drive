@@ -5,16 +5,13 @@ const api = {
   delete: '/.netlify/functions/delete'
 };
 
-const authUser = document.getElementById('authUser');
-const authPass = document.getElementById('authPass');
-const saveAuth = document.getElementById('saveAuth');
-const clearAuth = document.getElementById('clearAuth');
 const message = document.getElementById('message');
 const uploadForm = document.getElementById('uploadForm');
 const fileInput = document.getElementById('fileInput');
 const fileRows = document.getElementById('fileRows');
 const emptyState = document.getElementById('emptyState');
 const tableWrap = document.getElementById('tableWrap');
+const logoutBtn = document.getElementById('logoutBtn');
 
 function setMessage(text, type = 'success') {
   message.textContent = text;
@@ -35,9 +32,13 @@ function getAuthHeader() {
   };
 }
 
-function syncAuthFields() {
-  authUser.value = localStorage.getItem('hrdDriveUser') || '';
-  authPass.value = localStorage.getItem('hrdDrivePass') || '';
+function requireLogin() {
+  const user = localStorage.getItem('hrdDriveUser') || '';
+  const pass = localStorage.getItem('hrdDrivePass') || '';
+
+  if (!user || !pass) {
+    window.location.href = '/';
+  }
 }
 
 async function request(url, options = {}) {
@@ -52,7 +53,7 @@ async function request(url, options = {}) {
   });
 
   if (response.status === 401) {
-    throw new Error('Autentikasi diperlukan. Isi username/password lalu simpan.');
+    throw new Error('Autentikasi diperlukan. Login ulang dari halaman awal.');
   }
 
   return response;
@@ -136,21 +137,6 @@ async function loadFiles() {
   }
 }
 
-saveAuth.addEventListener('click', async () => {
-  localStorage.setItem('hrdDriveUser', authUser.value.trim());
-  localStorage.setItem('hrdDrivePass', authPass.value);
-  setMessage('Login disimpan di browser.', 'success');
-  await loadFiles();
-});
-
-clearAuth.addEventListener('click', async () => {
-  localStorage.removeItem('hrdDriveUser');
-  localStorage.removeItem('hrdDrivePass');
-  syncAuthFields();
-  setMessage('Login dihapus dari browser.', 'success');
-  await loadFiles();
-});
-
 uploadForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
@@ -178,5 +164,12 @@ uploadForm.addEventListener('submit', async (event) => {
   }
 });
 
-syncAuthFields();
+logoutBtn.addEventListener('click', () => {
+  localStorage.removeItem('hrdDriveUser');
+  localStorage.removeItem('hrdDrivePass');
+  window.location.href = '/';
+});
+
+requireLogin();
 loadFiles();
+

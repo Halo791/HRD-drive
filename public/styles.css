@@ -38,12 +38,23 @@ a {
   padding: 32px 0 56px;
 }
 
+.shell-center {
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
+}
+
 .hero {
   display: grid;
   grid-template-columns: 1.7fr 1fr;
   gap: 24px;
   align-items: stretch;
   margin-bottom: 24px;
+}
+
+.hero-single {
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
 }
 
 .eyebrow {
@@ -84,6 +95,29 @@ h1 {
   gap: 16px;
 }
 
+.login-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span {
+  color: var(--muted);
+}
+
+.field input {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(7, 11, 22, 0.55);
+  color: var(--text);
+}
+
 .auth-card label {
   display: grid;
   gap: 8px;
@@ -107,6 +141,12 @@ h1 {
 .auth-row {
   margin-bottom: 6px;
   color: var(--muted);
+}
+
+.session-note {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .meta-card div {
@@ -278,5 +318,9 @@ th {
   .hero,
   .upload-form {
     grid-template-columns: 1fr;
+  }
+
+  .hero-single {
+    gap: 16px;
   }
 }

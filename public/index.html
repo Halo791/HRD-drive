@@ -3,79 +3,41 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MinIO Storage</title>
+    <title>HRD Drive - Login</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <section class="hero">
+    <main class="shell shell-center">
+      <section class="hero hero-single">
         <div>
           <p class="eyebrow">MinIO Storage Dashboard</p>
           <h1>HRD Drive</h1>
           <p class="lede">
-            Upload, lihat, unduh, dan hapus file dari bucket MinIO lewat web yang bisa
-            diakses di Netlify.
+            Masuk dulu untuk membuka halaman upload dan daftar file.
           </p>
         </div>
-        <div class="meta-card auth-card">
-          <div class="auth-row">
-            <span>Login dashboard</span>
+        <form id="loginForm" class="panel login-panel">
+          <div class="panel-head">
+            <h2>Login</h2>
+            <p>Simpan kredensial dashboard di browser ini.</p>
           </div>
-          <label>
+
+          <div id="message" class="alert" hidden></div>
+
+          <label class="field">
             <span>Username</span>
-            <input id="authUser" type="text" placeholder="admin" />
+            <input id="authUser" type="text" placeholder="admin" autocomplete="username" />
           </label>
-          <label>
+
+          <label class="field">
             <span>Password</span>
-            <input id="authPass" type="password" placeholder="••••••••" />
+            <input id="authPass" type="password" placeholder="••••••••" autocomplete="current-password" />
           </label>
-          <div class="auth-actions">
-            <button id="saveAuth" type="button">Simpan</button>
-            <button id="clearAuth" type="button" class="button secondary">Hapus</button>
-          </div>
-        </div>
-      </section>
 
-      <div id="message" class="alert" hidden></div>
-
-      <section class="panel upload-panel">
-        <div class="panel-head">
-          <h2>Upload File</h2>
-          <p>Pilih satu atau banyak file sekaligus.</p>
-        </div>
-
-        <form id="uploadForm" class="upload-form">
-          <label class="file-drop">
-            <span>Tarik file ke sini atau klik untuk memilih</span>
-            <input id="fileInput" type="file" name="files" multiple />
-          </label>
-          <button type="submit">Upload ke MinIO</button>
+          <button type="submit">Masuk ke Upload</button>
         </form>
       </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <h2>Daftar File</h2>
-          <p>Klik unduh untuk mengambil file dari MinIO melalui aplikasi ini.</p>
-        </div>
-
-        <div id="emptyState" class="empty-state">Memuat data...</div>
-        <div class="table-wrap" id="tableWrap" hidden>
-          <table>
-            <thead>
-              <tr>
-                <th>Nama</th>
-                <th>Ukuran</th>
-                <th>Diubah</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="fileRows"></tbody>
-          </table>
-        </div>
-      </section>
     </main>
-    <script src="/app.js"></script>
+    <script src="/login.js"></script>
   </body>
 </html>
-

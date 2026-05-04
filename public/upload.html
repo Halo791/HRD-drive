@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HRD Drive - Upload</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">MinIO Storage Dashboard</p>
+          <h1>HRD Drive</h1>
+          <p class="lede">
+            Upload, lihat, unduh, dan hapus file dari bucket MinIO.
+          </p>
+        </div>
+        <div class="meta-card auth-card">
+          <div class="auth-row">
+            <span>Session login</span>
+          </div>
+          <p class="session-note">Kredensial disimpan di browser ini sampai kamu logout.</p>
+          <div class="auth-actions">
+            <a class="button secondary" href="/">Ganti Login</a>
+            <button id="logoutBtn" type="button" class="button danger">Logout</button>
+          </div>
+        </div>
+      </section>
+
+      <div id="message" class="alert" hidden></div>
+
+      <section class="panel upload-panel">
+        <div class="panel-head">
+          <h2>Upload File</h2>
+          <p>Pilih satu atau banyak file sekaligus.</p>
+        </div>
+
+        <form id="uploadForm" class="upload-form">
+          <label class="file-drop">
+            <span>Tarik file ke sini atau klik untuk memilih</span>
+            <input id="fileInput" type="file" name="files" multiple />
+          </label>
+          <button type="submit">Upload ke MinIO</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Daftar File</h2>
+          <p>Klik unduh untuk mengambil file dari MinIO melalui aplikasi ini.</p>
+        </div>
+
+        <div id="emptyState" class="empty-state">Memuat data...</div>
+        <div class="table-wrap" id="tableWrap" hidden>
+          <table>
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Ukuran</th>
+                <th>Diubah</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="fileRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="/upload.js"></script>
+  </body>
+</html>
